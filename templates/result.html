@@ -6,7 +6,7 @@ content%}
   <li>Address: {{ data.address }}</li>
   <li>Price: {{ data.price }}</li>
   <li>
-    Status: {% if data.status == "new" %}새 상품{% elif data.status == "lnew"
+    Status?<br /> {% if data.status == "new" %}새 상품{% elif data.status == "lnew"
     %}거의 새 것{% elif data.status == "used" %}사용감 있음{% endif %}
   </li>
   <li>Email: {{ data.email }}</li>
