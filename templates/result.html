@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block title %}result{% endblock %} {% block
+content%}
+<ul>
+  <li>Product name: {{ data.prodName }}</li>
+  <li>Seller ID: {{ data.sellerId }}</li>
+  <li>Address: {{ data.address }}</li>
+  <li>Price: {{ data.price }}</li>
+  <li>
+    Status: {% if data.status == "new" %}새 상품{% elif data.status == "lnew"
+    %}거의 새 것{% elif data.status == "used" %}사용감 있음{% endif %}
+  </li>
+  <li>Email: {{ data.email }}</li>
+  <li>
+    Representative Image: {% if img_path %} <br /><img src="{{ img_path }}" />
+    {% endif %}
+  </li>
+</ul>
+{% endblock %}
