@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %}EwhaMarket{% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <a href="/" class="logo">EwhaMarket</a>
+
+        <div class="nav-links">
+          <a href="/list">상품 목록</a>
+          <a href="/review">리뷰 목록</a>
+          <a href="/reg_items">상품 등록</a>
+          <a href="/reg_reviews">리뷰 등록</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container">{% block content %} {% endblock %}</main>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+  </body>
+</html>
