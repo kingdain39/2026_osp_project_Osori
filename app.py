@@ -18,26 +18,30 @@ def reg_item_submit():
 
 @app.route("/list")
 def get_list():
-    return "list.html"
+    return render_template("list.html")
 
 
 @app.route("/review")
 def review():
-    return "review.html"
+    return render_template("review.html")
+    
 
 
 @app.route("/reg_items")
 def reg_items ():
-    return "reg_items.html"
+    return render_template("reg_items.html")
+    
 
 
 @app.route("/reg_reviews")
 def reg_reviews():
-    return "reg_reviews.html"
+    return render_template("reg_reviews.html")
+    
 
 @app.route("/")
 def index():
-    return "index.html"
+    return render_template("index.html")
+    
 
 
 
