@@ -1,37 +1,45 @@
-
-{% extends "base.html" %}
-
-{% block title %}리뷰 등록{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}리뷰 등록{% endblock %} {% block
+content %}
 <h2>리뷰 등록</h2>
 
 <p>상품에 대한 리뷰를 작성할 수 있는 페이지입니다.</p>
 
-<form action="/reg_reviews" method="POST">
-    <label for="product_name">상품명:</label>
-    <input type="text" id="product_name" name="product_name" required>
-    <br><br>
+<form id="reviewForm">
+  <label for="product_name">상품명:</label>
+  <input type="text" id="product_name" name="product_name" required />
+  <br /><br />
 
-    <label for="user_id">사용자 ID:</label>
-    <input type="text" id="user_id" name="user_id" required>
-    <br><br>
+  <label for="user_id">사용자 ID:</label>
+  <input type="text" id="user_id" name="user_id" required />
+  <br /><br />
 
-    <label for="rating">별점:</label>
-    <select id="rating" name="rating" required>
-        <option value="5">5점</option>
-        <option value="4">4점</option>
-        <option value="3">3점</option>
-        <option value="2">2점</option>
-        <option value="1">1점</option>
-    </select>
-    <br><br>
+  <label for="rating">별점:</label>
+  <select id="rating" name="rating" required>
+    <option value="5">5점</option>
+    <option value="4">4점</option>
+    <option value="3">3점</option>
+    <option value="2">2점</option>
+    <option value="1">1점</option>
+  </select>
+  <br /><br />
 
-    <label for="content">리뷰 내용:</label>
-    <textarea id="content" name="content" rows="5" required></textarea>
-    <br><br>
+  <label for="content">리뷰 내용:</label>
+  <textarea id="content" name="content" rows="5" required></textarea>
+  <br /><br />
 
-    <button type="submit">리뷰 등록</button>
+  <button type="submit">리뷰 등록</button>
 </form>
+
+<script>
+  document
+    .getElementById("reviewForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      alert(
+        "리뷰 등록 기능은 현재 시연용입니다. 실제 리뷰는 저장되지 않습니다.",
+      );
+    });
+</script>
 
 {% endblock %}
