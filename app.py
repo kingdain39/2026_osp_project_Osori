@@ -1,5 +1,34 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect, url_for, session
+from database import DBhandler
+import hashlib
+import sys
+
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "helloosp"
+DB = DBhandler()
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@app.route("/signup_post", methods =["POST"])
+def register_user():
+    # form에서 입력한 값들을 data에 담기
+    data = request.form
+    
+    # 비밀번호를 해시화하기
+    pw = request.form['pw']
+    pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+    
+    # DB에 회원정보 저장하기
+    if DB.insert_user(data, pw_hash):
+        return render_template("login.html")
+    else:
+        return render_template("signup.html", error="User ID already exists!")
 
 @app.route("/submit_item_post", methods =["POST"])
 def reg_item_submit():
