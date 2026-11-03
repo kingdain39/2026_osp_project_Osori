@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+{% if error %}
+<script>alert("{{ error }}")</script>
+{% endif %}
+<form action="/signup_post" method="post">
+    <p>ID : <input type="text" name="user_id" required></p>
+    <p>Password : <input type="password" name="password" required></p>
+    <p>Nickname : <input type="text" name="nickname"></p>
+    <p>Input ID and password, and click the create button<br>
+        <input type="submit" value="Create"></p>
+</form>
+{% endblock %}
