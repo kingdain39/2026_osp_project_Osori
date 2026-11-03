@@ -1,2 +1,4 @@
 venv/
 authentication/
+__pycache__/
+*.pyc
