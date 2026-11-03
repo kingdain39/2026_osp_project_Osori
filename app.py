@@ -30,20 +30,36 @@ def register_user():
     else:
         return render_template("signup.html", error="User ID already exists!")
 
-@app.route("/submit_item_post", methods =["POST"])
+DB = DBhandler()
+
+@app.route("/submit_item_post", methods=["POST"])
 def reg_item_submit():
-    # ① 글자 입력값 6개를 통째로 data에 담기
-        # ② 사진 파일을 꺼내기
-        # ③ 사진을 static/uploads/ 에 저장하기 
-        # ④ 화면에서 쓸 사진 경로(img_path) 만들기
-        # ⑤ result.html을 돌려주면서 data, img_path 넘기기
+
+    # 1. 상품 등록 form 데이터 받기
     data = request.form
+
+    # 2. 이미지 파일 받기
     image_file = request.files["repImg"]
-    image_file.save("static/images/{}".format(image_file.filename))
-    return render_template("result.html",data=data,img_path="static/images/{}".format(image_file.filename))
-    
 
+    # 3. 이미지 저장 경로 생성
+    img_path = "static/images/{}".format(image_file.filename)
 
+    # 4. 이미지 저장
+    image_file.save(img_path)
+
+    # 5. Firebase에 상품 정보 저장
+    DB.insert_item(
+        data["prodName"],
+        data,
+        img_path
+    )
+
+    # 6. 결과 페이지
+    return render_template(
+        "result.html",
+        data=data,
+        img_path=img_path
+    )
 
 @app.route("/list")
 def get_list():
