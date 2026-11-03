@@ -21,11 +21,11 @@ def register_user():
     data = request.form
     
     # 비밀번호를 해시화하기
-    pw = request.form['pw']
-    pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+    password = request.form['password']
+    password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
     
     # DB에 회원정보 저장하기
-    if DB.insert_user(data, pw_hash):
+    if DB.insert_user(data, password_hash):
         return render_template("login.html")
     else:
         return render_template("signup.html", error="User ID already exists!")
