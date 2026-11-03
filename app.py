@@ -30,7 +30,6 @@ def register_user():
     else:
         return render_template("signup.html", error="User ID already exists!")
 
-DB = DBhandler()
 
 @app.route("/submit_item_post", methods=["POST"])
 def reg_item_submit():
