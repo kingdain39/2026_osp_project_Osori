@@ -3,7 +3,7 @@ import json
 class DBhandler:
     def __init__(self):
         with open('./authentication/firebase_auth.json') as f:
-        config = json.load(f)
+            config = json.load(f)
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database()
 
@@ -24,7 +24,7 @@ class DBhandler:
         print(data,img_path)
         return True
 
-
+    # 회원가입 시 DB에 회원정보 저장
     def insert_user(self, data, pw):
         user_info ={
             "id": data['id'],
@@ -37,7 +37,7 @@ class DBhandler:
         else:
             return False
 
-
+    # 회원가입 시 아이디 중복 체크
     def user_duplicate_check(self, id_string):
         users = self.db.child("user").get()
         if str(users.val()) == "None":
