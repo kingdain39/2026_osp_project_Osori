@@ -1,3 +1,4 @@
+from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from database import DBhandler
 import hashlib
@@ -77,9 +78,45 @@ def reg_item_submit():
         img_path=img_path
     )
 
+@app.route("/item/<item_key>")
+def item_detail(item_key):
+    item = DB.get_item(item_key)
+
+    # 존재하지 않는 상품이면 404 응답
+    if item is None:
+        abort(404)
+
+    return render_template(
+        "item_detail.html",
+        item=item,
+        item_key=item_key
+    )
+
 @app.route("/list")
 def get_list():
-    return render_template("list.html")
+    # 페이지 번호: 숫자가 아니면 1페이지
+    page = request.args.get("page", default=1, type=int)
+    per_page = 4
+
+    # 상품 키를 기준으로 정렬해서 페이지마다 순서를 일정하게 유지
+    items = sorted(DB.get_items().items(), key=lambda item: item[0])
+
+    total_items = len(items)
+    total_pages = max(1, (total_items + per_page - 1) // per_page)
+
+    # 페이지 번호를 유효한 범위로 제한
+    page = max(1, min(page, total_pages))
+
+    start = (page - 1) * per_page
+    page_items = items[start:start + per_page]
+
+    return render_template(
+        "list.html",
+        items=page_items,
+        page=page,
+        total_pages=total_pages,
+        total_items=total_items
+    )
 
 
 @app.route("/review")
