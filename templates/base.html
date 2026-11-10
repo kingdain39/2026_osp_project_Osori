@@ -23,8 +23,8 @@
           <a href="/reg_items">상품 등록</a>
           <a href="/reg_reviews">리뷰 등록</a>
 
-          {% if session.get("id") %}
-          <span class="nav-user">Hello, {{ session["id"] }}!</span>
+          {% if session.get("user_id") %}
+          <span class="nav-user">Hello, {{ session["user_id"] }}!</span>
           <a href="/logout">로그아웃</a>
           {% else %}
           <a href="/login">로그인</a>
