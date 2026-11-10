@@ -24,11 +24,11 @@ def login_confirm():
         return redirect(url_for("index"))
 
     flash("Wrong ID or PW!")
-    return redirect(url_for("login"))
+    return render_template("login.html")
 
 @app.route("/logout")
 def logout():
-    session.pop("user_id", None)
+    session.clear()
     return redirect(url_for("index"))
 
 @app.route("/signup")
