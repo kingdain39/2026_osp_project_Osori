@@ -7,21 +7,24 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "helloosp"
 DB = DBhandler()
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login")
 def login():
-    if request.method == "POST":
-        user_id = request.form["user_id"]
-        password = request.form["password"]
-        
-        user = DB.get_user(user_id)
-        pw_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        
-        if user and user["password"] == pw_hash:
-            session["user_id"] = user_id
-            return redirect(url_for("index"))
-        
-        flash("Wrong ID or PW!")
     return render_template("login.html")
+
+@app.route("/login_confirm", methods=["POST"])
+def login_confirm():
+    user_id = request.form["user_id"]
+    password = request.form["password"]
+
+    user = DB.get_user(user_id)
+    pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
+    if user and user["password"] == pw_hash:
+        session["user_id"] = user_id
+        return redirect(url_for("index"))
+
+    flash("Wrong ID or PW!")
+    return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
