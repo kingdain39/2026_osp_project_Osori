@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
-from flask import Flask, render_template, request, flash, redirect, url_for, session
 from database import DBhandler
 import hashlib
 import sys
@@ -16,21 +15,21 @@ def login():
 def login_confirm():
     user_id = request.form["user_id"]
     password = request.form["password"]
-    
+
     user = DB.get_user(user_id)
-    pw_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    
-    if user and user["password"] == pw_hash:
-                session["user_id"] = user_id
-                return redirect(url_for("index"))
-            
+    pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
+    if user and user["pw"] == pw_hash:
+        session["user_id"] = user_id
+        return redirect(url_for("index"))
+
     flash("Wrong ID or PW!")
-    return render_template("login.html")
+    return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
     session.pop("user_id", None)
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 @app.route("/signup")
 def signup():
