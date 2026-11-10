@@ -1,0 +1,33 @@
+:root {
+  /* Brand Color */
+  --color-primary: #00462a;
+  --color-primary-light: #e8f3ee;
+  --color-primary-dark: #00331f;
+  --color-secondary: #f4a261;
+  /* Text Color */
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  /* Background Color */
+  --color-bg-default: #ffffff;
+  --color-bg-subtle: #fcfcfc;
+  /* Border Color */
+  --color-border-default: #e5e7eb;
+  --color-border-focus: #00462a;
+
+  /* 간격 space */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 25px;
+  --space-32: 32px;
+
+  /* 모서리 radius */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>상품 상세 | Emade</title>
+    <!-- 파일 경로 변경 시 수정에 유의해주세요 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/reset.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/variable.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/default.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/component/card.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/product-detail.css') }}" />
+  </head>
+  <body>
+    <header>
+      <a href="{{ url_for('index') }}" class="logo">Emade</a>
+      <form class="search">
+        <input type="text" placeholder="상품, 태그로 검색해보세요!" />
+        <button><img src="{{ url_for('static', filename='fe2/svg/search.svg') }}" alt="검색" /></button>
+      </form>
+      <!-- js 적용 시 로그인/로그아웃 수정. -->
+      <div class="menu">
+        <a href="#" class="menu_list">로그아웃</a>
+        <a href="/mypage-wishlist.html" class="menu_list">찜</a>
+        <a href="/mypage-info.html" class="menu_list">마이페이지</a>
+        <a href="/cart.html" class="menu_list">장바구니</a>
+      </div>
+    </header>
+
+    <nav>
+      <a href="{{ url_for('get_list') }}">전체</a>
+      <a href="{{ url_for('get_list') }}">뜨개질</a>
+      <a href="{{ url_for('get_list') }}">키링/액세서리</a>
+      <a href="{{ url_for('get_list') }}">문구</a>
+      <a href="{{ url_for('get_list') }}">수공예품</a>
+      <a href="{{ url_for('get_list') }}">DIY</a>
+      <a href="{{ url_for('get_list') }}">홈데코</a>
+      <a href="/ranking.html">랭킹</a>
+      <a href="{{ url_for('get_list') }}">기타</a>
+    </nav>
+
+    <main class="product-detail">
+      <div class="breadcrumb"><a href="{{ url_for('index') }}">홈</a><span>&gt;</span><a href="{{ url_for('get_list') }}">전체상품</a><span>&gt;</span><strong>{{ item.get('prodName', '상품') }}</strong></div>
+      <div class="detail">
+        <div class="detail__left">
+          <div class="gallery">
+            <div class="gallery__main">
+              {% if item.get('img_path') %}
+              {% set img = item.get('img_path') %}
+              <img src="{{ img if img.startswith(('http://', 'https://', '/')) else '/' ~ img }}" alt="{{ item.get('prodName', '상품') }}" />
+              {% else %}<div class="fe2-image-empty">상품 이미지 없음</div>{% endif %}
+            </div>
+          </div>
+          <section class="desc"><h2 class="desc__title">상품 정보</h2><p class="desc__text">등록된 상품의 상세 정보입니다.</p></section>
+        </div>
+        <div class="detail__right">
+          <div class="info__head"><h1 class="info__name">{{ item.get('prodName', '상품명 없음') }}</h1></div>
+          <div class="info__price-row"><p class="info__price">{{ item.get('price', '-') }}원</p></div>
+          <div class="seller"><img class="seller__avatar" src="{{ url_for('static', filename='fe2/svg/profile.svg') }}" alt="" /><span class="seller__name">{{ item.get('sellerId', '판매자 미등록') }}</span></div>
+          <dl class="fe2-detail-fields">
+            <div><dt>상품명</dt><dd>{{ item.get('prodName', '-') }}</dd></div>
+            <div><dt>판매자 ID</dt><dd>{{ item.get('sellerId', '-') }}</dd></div>
+            <div><dt>가격</dt><dd>{{ item.get('price', '-') }}원</dd></div>
+            <div><dt>주소</dt><dd>{{ item.get('address', '-') }}</dd></div>
+            <div><dt>상태</dt><dd>{{ item.get('status', '-') }}</dd></div>
+            <div><dt>이메일</dt><dd>{{ item.get('email', '-') }}</dd></div>
+          </dl>
+          <a class="fe2-back" href="{{ url_for('get_list') }}">상품 목록으로 돌아가기</a>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span class="logo">Emade</span>
+      <p class="tagline">이화여자대학교 벗들의 핸드메이드 마켓</p>
+      <div class="footer_link">
+        <a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> ·
+        <a href="#">문의</a>
+      </div>
+    </footer>
+  </body>
+</html>

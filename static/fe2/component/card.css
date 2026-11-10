@@ -1,0 +1,209 @@
+/* =========================================
+   reset.css → variable.css → card.css 순서로 html 파일에 불러와주세요.
+   그 다음 필요한 card를 card.html 에서 골라 복사 붙여넣기 해주시면 됩니다.
+   종류
+   - .card                  기본 카드 (card1, card3)
+     └ 작가 영역(.card__author) 빼면 card3
+     └ 찜 해제 버튼(.card__btn) 넣으면 card2
+
+   - .card.card--sm         작은 카드 (card4)
+
+   - .card.card--horizontal 가로형 카드 (card5)
+   ========================================= */
+
+/* ---------- 기본 카드 ---------- */
+.card {
+  /* 카드 변수 */
+  --card-width: 220px;
+  --card-height: 260px;
+  --card-pad: 6px;
+  --thumb-height: 120px;
+  --title-size: 20px;
+  --price-size: 18px;
+  --like-size: 36px;
+  --profile-size: 45px;
+  --artist-size: 16px;
+
+  position: relative;
+  width: var(--card-width);
+  padding: var(--card-pad);
+  height: var(--card-height);
+  background: var(--color-bg-default);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+}
+.card--NoProfile {
+  --card-height: 200px;
+  --card-width: 180px;
+}
+
+.card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 상품 사진 (썸네일) */
+.card__thumb {
+  height: var(--thumb-height);
+  overflow: hidden;
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
+  border: none;
+}
+
+.card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 텍스트 영역 */
+.card__info {
+  padding: 12px 4px;
+}
+
+.card__title {
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card__price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 작가 */
+.card__artist {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.card__profile {
+  width: var(--profile-size);
+  height: var(--profile-size);
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.card__profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__artist-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* 찜 버튼 (하트) */
+.card__like {
+  position: absolute;
+  top: calc(var(--card-pad) + 4px);
+  right: calc(var(--card-pad) + 4px);
+  width: var(--like-size);
+  height: var(--like-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+/* ---------- 작은 카드 (card3) ---------- */
+.card--sm {
+  --card-width: 120px;
+  --card-height: 130px;
+  --card-pad: 4px;
+  --thumb-height: 75px;
+  --title-size: 14px;
+  --price-size: 14px;
+  --like-size: 18px;
+}
+
+.card--sm .card__info {
+  padding: 6px 2px 2px;
+}
+
+.card--sm .card__title {
+  font-size: var(--title-size);
+  font-weight: 700;
+}
+
+.card--sm .card__price {
+  font-size: var(--price-size);
+  font-weight: 700;
+}
+
+.card--sm .card__like {
+  top: calc(var(--card-pad) + 2px);
+  right: calc(var(--card-pad) + 2px);
+}
+
+/* ---------- 가로형 카드 (card4) ---------- */
+.card--horizontal {
+  --card-width: 360px;
+  --card-height: 87px;
+  --card-pad: 4px;
+  --thumb-width: 110px;
+  --thumb-height: 75px;
+  --title-size: 14px;
+  --price-size: 14px;
+  --like-size: 18px;
+  --profile-size: 28px;
+  --artist-size: 12px;
+}
+
+.card--horizontal .card__link {
+  display: flex;
+  gap: 6px;
+}
+
+.card--horizontal .card__thumb {
+  flex-shrink: 0;
+  width: var(--thumb-width);
+  height: var(--thumb-height);
+}
+
+.card--horizontal .card__info {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 2px;
+}
+
+.card--horizontal .card__title {
+  margin-bottom: 6px;
+  font-size: var(--title-size);
+}
+
+.card--horizontal .card__price {
+  margin-bottom: 6px;
+  font-size: var(--price-size);
+}
+
+.card--horizontal .card__artist {
+  gap: 6px;
+  margin-top: 6px;
+}
+.card--horizontal .card__artist-name {
+  font-size: var(--artist-size);
+}
+/* 하트를 썸네일 오른쪽 위에 */
+.card--horizontal .card__like {
+  top: calc(var(--card-pad) + 2px);
+  right: auto;
+  left: calc(var(--card-pad) + var(--thumb-width) - var(--like-size) - 2px);
+}

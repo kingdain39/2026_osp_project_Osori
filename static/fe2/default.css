@@ -1,0 +1,110 @@
+/* Header */
+header {
+  background: var(--color-bg-subtle);
+  display: flex;
+  margin: 0 auto;
+  height: 88px;
+  padding: 20px 120px;
+  justify-content: space-evenly;
+  align-items: center;
+  /* aspect-ratio: 180/11; */
+  gap: 180px;
+}
+
+header .logo {
+  color: var(--color-primary);
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.search {
+  width: 480px;
+  height: 36px;
+  padding: 0 14px;
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+}
+
+.search input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.search button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.search img {
+  width: 24px;
+}
+
+.menu {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* Nav */
+nav {
+  height: 48px;
+  border-bottom: 2px solid var(--color-border-default);
+  background: var(--color-bg-subtle);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 56px;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/*검색창 focus 시*/
+.search:focus-within {
+  background: var(--color-bg-default);
+  border: 2px solid var(--color-primary);
+}
+
+/* Main */
+main {
+  flex: 1;
+  padding: 24px 120px;
+}
+
+/* Footer */
+footer {
+  height: 100px;
+  background: var(--color-bg-subtle);
+  border-top: 1px solid var(--color-border-default);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 160px;
+  white-space: nowrap;
+}
+
+footer .logo {
+  color: var(--color-primary);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.footer_link {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
