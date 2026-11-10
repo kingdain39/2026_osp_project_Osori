@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card | Component</title>
+    <link rel="stylesheet" href="/reset.css" />
+    <link rel="stylesheet" href="/variable.css" />
+    <link rel="stylesheet" href="/component/card.css"
+  </head>
+  <body>
+    <div class="demo">
+
+
+        <!-- card1: 상품명 + 가격 + 작가프로필 -->
+      <section>
+        <article class="card">
+          <a href="#" class="card__link">
+            <div class="card__thumb">
+               <img src="#"/>
+            </div>
+            <div class="card__info">
+              <p class="card__title">상품명</p>
+              <p class="card__price">12,000원</p>
+              <div class="card__artist">
+                <span class="card__profile"><img class="card__avatar" src="#"/></span>
+                <span class="card__artist-name">작가이름</span>
+              </div>
+            </div>
+          </a>
+          <button type="button" class="card__like">
+            <img src="/svg/찜=On.svg" />
+          </button>
+        </article>
+      </section>
+
+
+        <!-- card2: 상품명 + 가격 (large ver)-->
+      <section>
+        <article class="card card--NoProfile">
+          <a href="#" class="card__link">
+            <div class="card__thumb"><img src="#"/></div>
+            <div class="card__info">
+              <h3 class="card__title">상품명</h3>
+              <p class="card__price">12,000원</p>
+            </div>
+          </a>
+          <button type="button" class="card__like">
+            <img src="/svg/찜=On.svg" />
+          </button>
+        </article>
+      </section>
+
+
+
+        <!-- card3: 상품명 + 가격 (small ver)-->
+      <section>
+        <article class="card card--sm">
+          <a href="#" class="card__link">
+            <div class="card__thumb"><img src="#"/></div>
+            <div class="card__info">
+              <h3 class="card__title">상품명</h3>
+              <p class="card__price">12,000원</p>
+            </div>
+          </a>
+          <button type="button" class="card__like">
+            <img src="/svg/찜=Off.svg" />
+          </button>
+        </article>
+      </section>
+
+
+        <!-- card4: 상품명 + 가격 + 작가프로필 (가로형) -->
+        <section>
+        <article class="card card--horizontal">
+          <a href="#" class="card__link">
+            <div class="card__thumb"><img src="#"/></div>
+            <div class="card__info">
+              <h3 class="card__title">상품명</h3>
+              <p class="card__price">12,000원</p>
+              <div class="card__artist">
+                <span class="card__profile"><img src="#"/></span>
+                <span class="card__artist-name">작가이름</span>
+              </div>
+            </div>
+          </a>
+          <button type="button" class="card__like">
+            <img src="/svg/찜=Off.svg" />
+          </button>
+        </article>
+      </section>
+
+
+    </div>
+  </body>
+</html>
