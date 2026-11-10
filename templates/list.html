@@ -1,189 +1,53 @@
-<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>상품 목록 | Emade</title>
-    <!-- 파일 경로 변경 시 수정에 유의해주세요 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/reset.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/variable.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/default.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/component/card.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='fe2/product-list.css') }}" />
-  </head>
-  <body>
-    <header>
-      <a href="{{ url_for('index') }}" class="logo">Emade</a>
-      <form class="search">
-        <input type="text" placeholder="상품, 태그로 검색해보세요!" />
-        <button><img src="{{ url_for('static', filename='fe2/svg/search.svg') }}" alt="검색" /></button>
-      </form>
-      <!-- js 적용 시 로그인/로그아웃 수정. -->
-      <div class="menu">
-        <a href="#" class="menu_list">로그아웃</a>
-        <a href="/mypage-wishlist.html" class="menu_list">찜</a>
-        <a href="/mypage-info.html" class="menu_list">마이페이지</a>
-        <a href="/cart.html" class="menu_list">장바구니</a>
+{% extends "base.html" %}
+{% block title %}EwhaMarket | 상품 목록{% endblock %}
+{% block content %}
+<style>
+  .fe2-heading { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:24px; }
+  .fe2-heading h1 { margin:0; color:#00664f; }
+  .fe2-count { color:#666; font-size:14px; }
+  .fe2-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+  .fe2-card { display:block; overflow:hidden; background:white; border:1px solid #dfe7e3; border-radius:10px; color:inherit; text-decoration:none; }
+  .fe2-card:hover { border-color:#00664f; box-shadow:0 3px 12px #00000012; }
+  .fe2-thumb { width:100%; aspect-ratio:4/3; background:#edf2ef; display:flex; justify-content:center; align-items:center; overflow:hidden; color:#777; font-size:14px; }
+  .fe2-thumb img { width:100%; height:100%; object-fit:cover; }
+  .fe2-info { padding:14px; }
+  .fe2-name { font-weight:bold; margin:0 0 9px; overflow-wrap:anywhere; }
+  .fe2-price { font-weight:bold; color:#00664f; margin:0 0 8px; }
+  .fe2-seller { color:#666; font-size:13px; margin:0; overflow-wrap:anywhere; }
+  .fe2-pagination { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:32px 0 0; }
+  .fe2-pagination a { display:inline-block; padding:9px 13px; border:1px solid #cddbd4; border-radius:6px; color:#00664f; text-decoration:none; }
+  .fe2-pagination a[aria-current="page"] { background:#00664f; border-color:#00664f; color:white; font-weight:bold; }
+  .fe2-empty { grid-column:1/-1; padding:35px; background:white; text-align:center; color:#666; border-radius:8px; }
+  @media(max-width:850px){.fe2-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:480px){.fe2-grid{grid-template-columns:1fr;}}
+</style>
+<section aria-label="상품 목록">
+  <div class="fe2-heading"><h1>상품 목록</h1><span class="fe2-count">전체 {{ total_items }}개</span></div>
+  <div class="fe2-grid">
+    {% for item_key, item in items %}
+    <a class="fe2-card" href="{{ url_for('item_detail', item_key=item_key) }}">
+      <div class="fe2-thumb">
+        {% if item.get('img_path') %}
+          {% set img = item.get('img_path') | string %}
+          <img src="{{ img if img.startswith(('http://', 'https://', '/')) else '/' ~ img }}" alt="{{ item.get('prodName', '상품') }}" />
+        {% else %}상품 이미지 없음{% endif %}
       </div>
-    </header>
-
-    <nav>
-      <a href="{{ url_for('get_list') }}">전체</a>
-      <a href="{{ url_for('get_list') }}">뜨개질</a>
-      <a href="{{ url_for('get_list') }}">키링/액세서리</a>
-      <a href="{{ url_for('get_list') }}">문구</a>
-      <a href="{{ url_for('get_list') }}">수공예품</a>
-      <a href="{{ url_for('get_list') }}">DIY</a>
-      <a href="{{ url_for('get_list') }}">홈데코</a>
-      <a href="/ranking.html">랭킹</a>
-      <a href="{{ url_for('get_list') }}">기타</a>
-    </nav>
-
-    <main class="product-list">
-      <!-- ===== 기존 디자인의 필터 UI (이번 과제에서 필터 동작은 요구되지 않음) ===== -->
-      <aside class="filter">
-        <section class="filter__group">
-          <h2 class="filter__title">카테고리</h2>
-          <ul class="filter__list">
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" checked />전체</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />뜨개질</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />키링/액세서리</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />문구</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />수공예품</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />DIY</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />홈데코</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="category" />기타</label
-              >
-            </li>
-          </ul>
-        </section>
-
-        <section class="filter__group">
-          <h2 class="filter__title">가격대</h2>
-          <ul class="filter__list">
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="price" checked />전체</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="price" />1만원 이하</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="price" />1만원 ~ 3만원</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="price" />3만원 ~ 5만원</label
-              >
-            </li>
-            <li>
-              <label class="check"
-                ><input type="checkbox" name="price" />5만원 이상</label
-              >
-            </li>
-          </ul>
-          <div class="price-range">
-            <input
-              type="text"
-              class="price-range__input"
-              placeholder="최소 금액"
-            />
-            <span class="price-range__dash"></span>
-            <input
-              type="text"
-              class="price-range__input"
-              placeholder="최대 금액"
-            />
-          </div>
-        </section>
-      </aside>
-
-      <!-- ===== 상품 목록 (오른쪽) ===== -->
-      <section class="products">
-        <h1 class="products__title">전체상품 <small class="fe2-total">({{ total_items }}개)</small></h1>
-
-        <!-- card1 (component/card.html) 복사 -->
-        <div class="products__grid">
-          {% for item_key, item in items %}
-          <article class="card">
-            <a href="{{ url_for('item_detail', item_key=item_key) }}" class="card__link">
-              <div class="card__thumb">
-                {% if item.get('img_path') %}
-                {% set img = item.get('img_path') %}
-                <img src="{{ img if img.startswith(('http://', 'https://', '/')) else '/' ~ img }}" alt="{{ item.get('prodName', '상품') }}" />
-                {% else %}
-                <div class="fe2-image-empty">상품 이미지 없음</div>
-                {% endif %}
-              </div>
-              <div class="card__info">
-                <p class="card__title">{{ item.get('prodName', '상품명 없음') }}</p>
-                <p class="card__price">{{ item.get('price', '-') }}원</p>
-                <div class="card__artist">
-                  <span class="card__profile"><img class="card__avatar" src="{{ url_for('static', filename='fe2/svg/profile.svg') }}" alt="" /></span>
-                  <span class="card__artist-name">{{ item.get('sellerId', '판매자 미등록') }}</span>
-                </div>
-              </div>
-            </a>
-          </article>
-          {% else %}
-          <p class="fe2-no-items">등록된 상품이 없습니다.</p>
-          {% endfor %}
-        </div>
-      </section>
-
-      <!-- ===== 페이지 번호 =====
-           default.css가 모든 nav 태그에 스타일을 주기 때문에 nav 대신 div를 썼어요 -->
-      <div class="pagination" aria-label="상품 목록 페이지">
-        {% if page > 1 %}<a href="{{ url_for('get_list', page=page-1) }}" aria-label="이전 페이지">&lt;</a>{% endif %}
-        {% for number in range(1, total_pages + 1) %}
-        <a href="{{ url_for('get_list', page=number) }}" {% if number == page %}class="is-active" aria-current="page"{% endif %}>{{ number }}</a>
-        {% endfor %}
-        {% if page < total_pages %}<a href="{{ url_for('get_list', page=page+1) }}" aria-label="다음 페이지">&gt;</a>{% endif %}
+      <div class="fe2-info">
+        <p class="fe2-name">{{ item.get('prodName', '상품명 없음') }}</p>
+        <p class="fe2-price">{{ item.get('price', '-') }}원</p>
+        <p class="fe2-seller">판매자: {{ item.get('sellerId', '-') }}</p>
       </div>
-    </main>
-
-    <footer>
-      <span class="logo">Emade</span>
-      <p class="tagline">이화여자대학교 벗들의 핸드메이드 마켓</p>
-      <div class="footer_link">
-        <a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> ·
-        <a href="#">문의</a>
-      </div>
-    </footer>
-  </body>
-</html>
+    </a>
+    {% else %}
+      <p class="fe2-empty">등록된 상품이 없습니다.</p>
+    {% endfor %}
+  </div>
+  <div class="fe2-pagination" aria-label="상품 목록 페이지">
+    {% if page > 1 %}<a href="{{ url_for('get_list', page=page-1) }}" aria-label="이전 페이지">&lt;</a>{% endif %}
+    {% for number in range(1, total_pages+1) %}
+      <a href="{{ url_for('get_list', page=number) }}" {% if number == page %}aria-current="page"{% endif %}>{{ number }}</a>
+    {% endfor %}
+    {% if page < total_pages %}<a href="{{ url_for('get_list', page=page+1) }}" aria-label="다음 페이지">&gt;</a>{% endif %}
+  </div>
+</section>
+{% endblock %}
