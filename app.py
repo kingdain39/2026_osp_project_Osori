@@ -1,3 +1,4 @@
+from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from database import DBhandler
 import hashlib
@@ -59,6 +60,20 @@ def reg_item_submit():
         "result.html",
         data=data,
         img_path=img_path
+    )
+
+@app.route("/item/<item_key>")
+def item_detail(item_key):
+    item = DB.get_item(item_key)
+
+    # 존재하지 않는 상품이면 404 응답
+    if item is None:
+        abort(404)
+
+    return render_template(
+        "item_detail.html",
+        item=item,
+        item_key=item_key
     )
 
 @app.route("/list")
