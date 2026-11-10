@@ -35,6 +35,15 @@ class DBhandler:
             return True
         else:
             return False
+        
+    def get_user(self, id_string):
+        users = self.db.child("user").get().val()
+        if not users:
+            return None
+        for key, value in users.items():
+            if value.get("id") == id_string:
+                return value
+        return None
 
     def user_duplicate_check(self, id_string):
         users = self.db.child("user").get()

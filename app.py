@@ -19,7 +19,7 @@ def login_confirm():
     user = DB.get_user(user_id)
     pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    if user and user["password"] == pw_hash:
+    if user and user["pw"] == pw_hash:
         session["user_id"] = user_id
         return redirect(url_for("index"))
 
