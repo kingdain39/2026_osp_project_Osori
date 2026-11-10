@@ -12,6 +12,26 @@ DB = DBhandler()
 def login():
     return render_template("login.html")
 
+@app.route("/login_confirm", methods=["POST"])
+def login_confirm():
+    user_id = request.form["user_id"]
+    password = request.form["password"]
+    
+    user = DB.get_user(user_id)
+    pw_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    
+    if user and user["password"] == pw_hash:
+                session["user_id"] = user_id
+                return redirect(url_for("index"))
+            
+    flash("Wrong ID or PW!")
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("login"))
+
 @app.route("/signup")
 def signup():
     return render_template("signup.html")
@@ -122,9 +142,6 @@ def reg_reviews():
 @app.route("/")
 def index():
     return render_template("index.html")
-    
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
