@@ -49,3 +49,16 @@ class DBhandler:
                     return False
 
             return True
+
+            def get_items(self):
+        """전체 상품을 상품 키와 함께 반환"""
+        items = self.db.child("item").get().val()
+
+        if not items:
+            return {}
+
+        return dict(items)
+
+    def get_item(self, item_key):
+        """상품 키에 해당하는 상품 하나를 반환"""
+        return self.db.child("item").child(item_key).get().val()

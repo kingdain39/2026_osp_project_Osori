@@ -63,7 +63,29 @@ def reg_item_submit():
 
 @app.route("/list")
 def get_list():
-    return render_template("list.html")
+    # 페이지 번호: 숫자가 아니면 1페이지
+    page = request.args.get("page", default=1, type=int)
+    per_page = 4
+
+    # 상품 키를 기준으로 정렬해서 페이지마다 순서를 일정하게 유지
+    items = sorted(DB.get_items().items(), key=lambda item: item[0])
+
+    total_items = len(items)
+    total_pages = max(1, (total_items + per_page - 1) // per_page)
+
+    # 페이지 번호를 유효한 범위로 제한
+    page = max(1, min(page, total_pages))
+
+    start = (page - 1) * per_page
+    page_items = items[start:start + per_page]
+
+    return render_template(
+        "list.html",
+        items=page_items,
+        page=page,
+        total_pages=total_pages,
+        total_items=total_items
+    )
 
 
 @app.route("/review")
