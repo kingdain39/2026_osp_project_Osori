@@ -50,7 +50,7 @@ class DBhandler:
 
             return True
 
-            def get_items(self):
+    def get_items(self):
         """전체 상품을 상품 키와 함께 반환"""
         items = self.db.child("item").get().val()
 
