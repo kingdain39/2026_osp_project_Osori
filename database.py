@@ -1,5 +1,6 @@
 import pyrebase
 import json
+from datetime import datetime, timezone
 
 class DBhandler:
     def __init__(self):
@@ -84,3 +85,19 @@ class DBhandler:
         else:
             self.db.child("heart").child(user_id).child(item_name).remove()
         return liked
+
+    def insert_review(self, *, title, product_name, product_id, body, rating,
+                      photo_filename, writer_id):
+        """Store a review beneath ``review`` with a Firebase-generated key."""
+        review_info = {
+            "title": title,
+            "product_name": product_name,
+            "product_id": product_id,
+            "body": body,
+            "rating": rating,
+            "photo_filename": photo_filename,
+            "writer_id": writer_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        result = self.db.child("review").push(review_info)
+        return result.get("name")
