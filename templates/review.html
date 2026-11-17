@@ -6,7 +6,10 @@ content %}
 {% if reviews %}
 <div class="review-grid">
   {% for review_id, review in reviews %}
-  <a class="review-card" href="/reviews/{{ review_id }}">
+  <a
+    class="review-card"
+    href="{{ url_for('review_detail', review_id=review_id) }}"
+  >
     <img
       src="{{ url_for('static', filename='uploads/reviews/' ~ review.photo_filename) }}"
       alt="{{ review.title }}"
