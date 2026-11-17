@@ -71,3 +71,16 @@ class DBhandler:
     def get_item(self, item_key):
         """상품 키에 해당하는 상품 하나를 반환"""
         return self.db.child("item").child(item_key).get().val()
+    
+    def get_heart(self, user_id, item_name):
+        """사용자가 해당 상품을 좋아요했는지 여부를 반환"""
+        heart = self.db.child("heart").child(user_id).child(item_name).get().val()
+        return bool(heart)  # None이면 False, True면 True 반환
+    
+    def set_heart(self, user_id, item_name, liked):
+        """사용자가 해당 상품을 좋아요했는지 여부를 설정"""
+        if liked:
+            self.db.child("heart").child(user_id).child(item_name).set(True)
+        else:
+            self.db.child("heart").child(user_id).child(item_name).remove()
+        return liked
