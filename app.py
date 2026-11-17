@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
+from unicodedata import name
+
+from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session, abort
 from database import DBhandler
 import hashlib
 import sys
@@ -119,6 +121,19 @@ def get_list():
         total_pages=total_pages,
         total_items=total_items
     )
+    
+@app.route("/item_like/<name>", methods=["GET", "POST"])
+def item_like(name):
+    user_id = session.get("id")
+    if user_id is None: 
+        return jsonify({"error": "Login required"}), 401
+    
+    if request.method == "GET":  
+        return jsonify({"liked": DB.get_heart(user_id, name)})
+    
+    data = request.get_json()
+    saved = DB.set_heart(user_id, name, data["liked"]) 
+    return jsonify({"liked": saved})  
 
 
 @app.route("/review")
