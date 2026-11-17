@@ -33,6 +33,7 @@
       <div><dt>판매 상태</dt><dd>{{ item.get('status', '-') }}</dd></div>
       <div><dt>이메일</dt><dd>{{ item.get('email', '-') }}</dd></div>
     </dl>
+    <p><a href="/reg_reviews?product_id={{ item_key | urlencode }}&amp;product_name={{ item.get('prodName', '') | urlencode }}">리뷰 작성</a></p>
   </div>
 </article>
 {% endblock %}

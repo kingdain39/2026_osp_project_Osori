@@ -4,13 +4,18 @@ content %}
 
 <p>상품에 대한 리뷰를 작성할 수 있는 페이지입니다.</p>
 
-<form id="reviewForm">
+<form id="reviewForm" action="/reviews/new" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="product_id" value="{{ request.args.get('product_id', '') }}" />
   <label for="product_name">상품명:</label>
-  <input type="text" id="product_name" name="product_name" required />
+  <input type="text" id="product_name" name="product_name" value="{{ request.args.get('product_name', '') }}" readonly required />
   <br /><br />
 
-  <label for="user_id">사용자 ID:</label>
-  <input type="text" id="user_id" name="user_id" required />
+  <label for="title">리뷰 제목:</label>
+  <input type="text" id="title" name="title" required />
+  <br /><br />
+
+  <label for="photo">사진 파일:</label>
+  <input type="file" id="photo" name="photo" accept=".png,.jpg,.jpeg,.gif,.webp" required />
   <br /><br />
 
   <label for="rating">별점:</label>
@@ -23,23 +28,13 @@ content %}
   </select>
   <br /><br />
 
-  <label for="content">리뷰 내용:</label>
-  <textarea id="content" name="content" rows="5" required></textarea>
+  <label for="body">리뷰 내용:</label>
+  <textarea id="body" name="body" rows="5" required></textarea>
   <br /><br />
 
   <button type="submit">리뷰 등록</button>
 </form>
 
-<script>
-  document
-    .getElementById("reviewForm")
-    .addEventListener("submit", function (event) {
-      event.preventDefault();
 
-      alert(
-        "리뷰 등록 기능은 현재 시연용입니다. 실제 리뷰는 저장되지 않습니다.",
-      );
-    });
-</script>
 
 {% endblock %}
