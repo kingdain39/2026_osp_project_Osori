@@ -121,10 +121,47 @@ def get_list():
     )
 
 
-@app.route("/review")
-def review():
-    return render_template("review.html")
+
+@app.route("/reviews")
+def review_list():
+     # 페이지 번호: 숫자가 아니면 1페이지
+        page = request.args.get("page", default=1, type=int)
+        per_page = 4
     
+        # 상품 키를 기준으로 정렬해서 페이지마다 순서를 일정하게 유지
+        reviews = sorted(DB.get_reviews().items(), key=lambda review: review[0],reverse=True)
+    
+        total_reviews = len(reviews)
+        total_pages = max(1, (total_reviews + per_page - 1) // per_page)
+    
+        # 페이지 번호를 유효한 범위로 제한
+        page = max(1, min(page, total_pages))
+    
+        start = (page - 1) * per_page
+        page_reviews = reviews[start:start + per_page]
+    
+        return render_template(
+            "review.html",
+            reviews=page_reviews,
+            page=page,
+            total_pages=total_pages,
+            total_reviews=total_reviews
+        )
+
+@app.route("/reviews/<review_id>")
+def review_detail(review_id):
+    review = DB.get_review(review_id)
+
+    # 존재하지 않는 상품이면 404 응답
+    if review is None:
+        abort(404)
+
+    return render_template(
+        "review_detail.html",
+        review=review,
+        review_id=review_id
+    )
+
 
 
 @app.route("/reg_items")

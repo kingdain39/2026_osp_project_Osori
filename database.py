@@ -71,3 +71,15 @@ class DBhandler:
     def get_item(self, item_key):
         """상품 키에 해당하는 상품 하나를 반환"""
         return self.db.child("item").child(item_key).get().val()
+
+
+
+    def get_reviews(self):
+        reviews = self.db.child("review").get().val()
+        if not reviews:
+            return {}
+        return dict(reviews)
+
+
+    def get_review(self, review_key):
+        return self.db.child("review").child(review_key).get().val()
