@@ -98,6 +98,78 @@ body {
   color: white;
 }
 
+/* 리뷰 목록 2x2 카드 */
+.review-total {
+  color: #666;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 720px;
+  margin: 24px auto;
+}
+
+.review-card {
+  display: block;
+  background-color: white;
+  border: 1px solid #dde5e2;
+  border-radius: 10px;
+  overflow: hidden;
+  color: #333;
+  text-decoration: none;
+}
+
+.review-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.review-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: #eef2f0;
+}
+
+.review-title {
+  margin: 0;
+  padding: 12px 14px;
+  font-weight: bold;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  padding: 60px 0;
+}
+
+/* 페이지 번호 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.pagination a,
+.pagination .current {
+  padding: 6px 12px;
+  border: 1px solid #00664f;
+  border-radius: 6px;
+  color: #00664f;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background-color: #e6f0ed;
+}
+
+.pagination .current {
+  background-color: #00664f;
+  color: white;
+}
 /* 모바일 화면 */
 @media (max-width: 700px) {
   .navbar {
