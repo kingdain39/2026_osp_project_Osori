@@ -128,7 +128,7 @@ def review_list():
         page = request.args.get("page", default=1, type=int)
         per_page = 4
     
-        # 상품 키를 기준으로 정렬해서 페이지마다 순서를 일정하게 유지
+        # 리뷰 키를 기준으로 정렬해서 페이지마다 순서를 일정하게 유지
         reviews = sorted(DB.get_reviews().items(), key=lambda review: review[0],reverse=True)
     
         total_reviews = len(reviews)
@@ -152,7 +152,7 @@ def review_list():
 def review_detail(review_id):
     review = DB.get_review(review_id)
 
-    # 존재하지 않는 상품이면 404 응답
+    # 존재하지 않는 리뷰면 404 응답
     if review is None:
         abort(404)
 
