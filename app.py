@@ -124,7 +124,7 @@ def get_list():
     
 @app.route("/item_like/<name>", methods=["GET", "POST"])
 def item_like(name):
-    user_id = session.get("id")
+    user_id = session.get("user_id")
     if user_id is None: 
         return jsonify({"error": "Login required"}), 401
     
