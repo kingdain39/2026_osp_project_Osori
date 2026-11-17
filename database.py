@@ -72,6 +72,18 @@ class DBhandler:
     def get_item(self, item_key):
         """상품 키에 해당하는 상품 하나를 반환"""
         return self.db.child("item").child(item_key).get().val()
+
+
+
+    def get_reviews(self):
+        reviews = self.db.child("review").get().val()
+        if not reviews:
+            return {}
+        return dict(reviews)
+
+
+    def get_review(self, review_key):
+        return self.db.child("review").child(review_key).get().val()
     
     def get_heart(self, user_id, item_name):
         """사용자가 해당 상품을 좋아요했는지 여부를 반환"""
