@@ -6,12 +6,9 @@ content %}
 {% if reviews %}
 <div class="review-grid">
   {% for review_id, review in reviews %}
-  <a
-    class="review-card"
-    href="{{ url_for('review_detail', review_id=review_id) }}"
-  >
+  <a class="review-card" href="/reviews/{{ review_id }}">
     <img
-      src="{{ url_for('static', filename='images/' ~ review.img_path) }}"
+      src="{{ url_for('static', filename='uploads/reviews/' ~ review.photo_filename) }}"
       alt="{{ review.title }}"
     />
     <p class="review-title">{{ review.title }}</p>
@@ -23,14 +20,14 @@ content %}
 {% endif %}
 
 <nav class="pagination">
-  {% if page > 1 %}<a href="{{ url_for('review_list', page=page-1) }}">이전</a
-  >{% endif %} {% for p in range(1, (page_count or 1) + 1) %} {% if p == page
-  %}<span class="current">{{ p }}</span> {% else %}<a
-    href="{{ url_for('review_list', page=p) }}"
-    >{{ p }}</a
-  >{% endif %} {% endfor %} {% if page < page_count %}<a
-    href="{{ url_for('review_list', page=page+1) }}"
-    >다음</a
-  >{% endif %}
+  {% if page > 1 %}
+  <a href="/reviews?page={{ page - 1 }}">이전</a>
+  {% endif %} {% for p in range(1, (page_count or 1) + 1) %} {% if p == page %}
+  <span class="current">{{ p }}</span>
+  {% else %}
+  <a href="/reviews?page={{ p }}">{{ p }}</a>
+  {% endif %} {% endfor %} {% if page < page_count %}
+  <a href="/reviews?page={{ page + 1 }}">다음</a>
+  {% endif %}
 </nav>
 {% endblock %}
