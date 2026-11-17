@@ -1,11 +1,33 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
 from database import DBhandler
 import hashlib
-import sys
+from pathlib import Path
+from uuid import uuid4
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "helloosp"
+app.config["REVIEW_UPLOAD_FOLDER"] = Path(app.static_folder) / "uploads" / "reviews"
 DB = DBhandler()
+
+ALLOWED_REVIEW_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+
+
+def _save_review_image(image_file):
+    """Save a review image and return only its generated filename."""
+    original_name = secure_filename(image_file.filename or "")
+    if not original_name or "." not in original_name:
+        return None
+
+    extension = original_name.rsplit(".", 1)[1].lower()
+    if extension not in ALLOWED_REVIEW_IMAGE_EXTENSIONS:
+        return None
+
+    upload_folder = app.config["REVIEW_UPLOAD_FOLDER"]
+    upload_folder.mkdir(parents=True, exist_ok=True)
+    saved_name = f"{uuid4().hex}.{extension}"
+    image_file.save(upload_folder / saved_name)
+    return saved_name
 
 @app.route("/login")
 def login():
@@ -135,7 +157,54 @@ def reg_items ():
 
 @app.route("/reg_reviews")
 def reg_reviews():
-    return render_template("reg_reviews.html")
+    return render_template(
+        "reg_reviews.html",
+        product_name=request.args.get("product_name", ""),
+        product_id=request.args.get("product_id", ""),
+    )
+
+
+@app.route("/submit_review_post", methods=["POST"])
+@app.route("/reviews/new", methods=["POST"])
+def reg_review_submit():
+    """Create one Firebase review record and save its uploaded photo."""
+    title = request.form.get("title", "").strip()
+    product_name = request.form.get("product_name", "").strip()
+    product_id = request.form.get("product_id", "").strip()
+    body = request.form.get("body", request.form.get("content", "")).strip()
+    rating = request.form.get("rating", "").strip()
+    image_file = request.files.get("photo") or request.files.get("review_photo")
+
+    if not all([title, product_name, body, rating, image_file and image_file.filename]):
+        flash("리뷰 제목, 상품명, 사진, 내용, 별점을 모두 입력해주세요.")
+        return redirect(url_for("reg_reviews", product_name=product_name, product_id=product_id))
+
+    try:
+        rating_value = int(rating)
+    except ValueError:
+        rating_value = 0
+    if rating_value not in range(1, 6):
+        flash("별점은 1점에서 5점 사이여야 합니다.")
+        return redirect(url_for("reg_reviews", product_name=product_name, product_id=product_id))
+
+    photo_filename = _save_review_image(image_file)
+    if photo_filename is None:
+        flash("사진은 png, jpg, jpeg, gif, webp 파일만 업로드할 수 있습니다.")
+        return redirect(url_for("reg_reviews", product_name=product_name, product_id=product_id))
+
+    DB.insert_review(
+        title=title,
+        product_name=product_name,
+        product_id=product_id,
+        body=body,
+        rating=rating_value,
+        photo_filename=photo_filename,
+        writer_id=session.get("user_id", ""),
+    )
+
+    # The review-detail route will be implemented by the review 조회 담당자.
+    flash("리뷰가 등록되었습니다.")
+    return redirect(url_for("review"))
     
 
 @app.route("/")
