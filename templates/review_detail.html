@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}EwhaMarket | 리뷰 상세{% endblock %}
+{#
+  리뷰 상세 페이지 (프론트 3)
+  URL: /reviews/<review_id>   ← review_id = push()가 자동 생성한 key
+
+  백엔드 2가 render_template으로 넘겨줄 값:
+    review_id  : 리뷰 key (str)
+    review     : {"title", "product_name", "photo_filename", "body", "rating"}
+                 (product_name = 상품 이름 = DB item/{상품이름})
+  사진 경로    : static/uploads/reviews/<photo_filename>
+
+  백엔드 3 좋아요 API (대상: 상품):
+    GET  /item_like/<name>                      → {"liked": bool}
+    POST /item_like/<name>  body {"liked": bool} → {"liked": bool}
+    비로그인 → 401 {"error": "Login required"}
+#}
+{% block content %}
+<div class="review-detail">
+
+  <!-- 제목 -->
+  <h2 class="review-title">{{ review.title }}</h2>
+
+  <!-- 상품명 -->
+  <p class="review-product">상품명: <strong>{{ review.product_name }}</strong></p>
+
+  <!-- 사진 -->
+  <img class="review-img"
+       src="{{ url_for('static', filename='uploads/reviews/' ~ review.photo_filename) }}"
+       alt="{{ review.title }}">
+
+  <!-- 별점 -->
+  <p class="review-rate">
+    {% for i in range(1, 6) %}{% if i <= review.rating|int %}★{% else %}☆{% endif %}{% endfor %}
+    <span class="rate-num">({{ review.rating }}/5)</span>
+  </p>
+
+  <!-- 본문 -->
+  <p class="review-content">{{ review.body }}</p>
+
+  <!-- 상품 좋아요: 이 영역만 AJAX로 갱신 -->
+  <div class="like-area">
+    <button id="like-btn" type="button" class="like-btn"
+            data-item-name="{{ review.product_name }}">
+      <span id="like-text">♡ 좋아요</span>
+    </button>
+  </div>
+  <p id="like-msg" class="like-msg" hidden></p>
+
+</div>
+
+<style>
+  .review-detail { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+  .review-title { margin-bottom: 4px; }
+  .review-product { color: #666; margin-top: 0; }
+  .review-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; }
+  .review-rate { color: #f5a623; font-size: 1.3rem; }
+  .rate-num { color: #666; font-size: 0.9rem; }
+  .review-content { white-space: pre-wrap; line-height: 1.6; }
+
+  .like-area { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+  .like-btn {
+    border: 1px solid #ccc; background: #fff; color: #333;
+    border-radius: 20px; padding: 8px 18px; font-size: 1rem; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  /* 좋아요 선택 상태: 색상 변경 */
+  .like-btn.liked { background: #e0245e; border-color: #e0245e; color: #fff; }
+  .like-btn:disabled { opacity: 0.5; cursor: wait; }
+  .like-msg { color: #e0245e; font-size: 0.9rem; }
+</style>
+
+<script>
+  const likeBtn   = document.getElementById("like-btn");
+  const likeText  = document.getElementById("like-text");
+  const likeMsg   = document.getElementById("like-msg");
+
+  // 상품 이름이 한글/공백이어도 URL이 깨지지 않게 인코딩
+  const itemName = likeBtn.dataset.itemName;
+  const likeUrl  = `/item_like/${encodeURIComponent(itemName)}`;
+
+  let liked = false;   // 현재 좋아요 상태
+
+  // 버튼 문구/색상만 바꾸는 함수 (페이지 새로고침 X)
+  function render() {
+    likeBtn.classList.toggle("liked", liked);
+    likeText.textContent = liked ? "♥ 좋아요 취소" : "♡ 좋아요";
+  }
+
+  function showMessage(text) {
+    likeMsg.textContent = text;
+    likeMsg.hidden = false;
+  }
+
+  // 1) 페이지 열릴 때: GET으로 현재 좋아요 상태 조회
+  async function loadLike() {
+    try {
+      const response = await fetch(likeUrl);
+      if (!response.ok) return;           // 비로그인(401)이면 기본 상태(♡) 유지
+      const data = await response.json(); // {"liked": bool}
+      liked = data.liked;
+      render();
+    } catch (error) {
+      // 조회 실패해도 버튼은 기본 상태로 둠
+    }
+  }
+
+  // 2) 버튼 클릭: POST로 반대 상태 요청 → 첫 클릭 좋아요, 두 번째 클릭 취소
+  async function toggleLike() {
+    likeBtn.disabled = true;      // 연타 방지
+    likeMsg.hidden = true;
+
+    try {
+      const response = await fetch(likeUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ liked: !liked }),
+      });
+
+      // 로그인 필요: 401 → 안내 메시지 후 로그인 페이지로 이동
+      if (response.status === 401) {
+        showMessage("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        setTimeout(() => { window.location.href = "/login"; }, 1200);
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("좋아요 처리에 실패했습니다.");
+      }
+
+      const data = await response.json(); // {"liked": bool} (서버에 저장된 상태)
+
+      liked = data.liked;
+      render();
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      likeBtn.disabled = false;
+    }
+  }
+
+  likeBtn.addEventListener("click", toggleLike);
+  loadLike();
+</script>
+{% endblock %}

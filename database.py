@@ -1,5 +1,6 @@
 import pyrebase
 import json
+from datetime import datetime, timezone
 
 class DBhandler:
     def __init__(self):
@@ -83,3 +84,32 @@ class DBhandler:
 
     def get_review(self, review_key):
         return self.db.child("review").child(review_key).get().val()
+    
+    def get_heart(self, user_id, item_name):
+        """사용자가 해당 상품을 좋아요했는지 여부를 반환"""
+        heart = self.db.child("heart").child(user_id).child(item_name).get().val()
+        return bool(heart)  # None이면 False, True면 True 반환
+    
+    def set_heart(self, user_id, item_name, liked):
+        """사용자가 해당 상품을 좋아요했는지 여부를 설정"""
+        if liked:
+            self.db.child("heart").child(user_id).child(item_name).set(True)
+        else:
+            self.db.child("heart").child(user_id).child(item_name).remove()
+        return liked
+
+    def insert_review(self, *, title, product_name, product_id, body, rating,
+                      photo_filename, writer_id):
+        """Store a review beneath ``review`` with a Firebase-generated key."""
+        review_info = {
+            "title": title,
+            "product_name": product_name,
+            "product_id": product_id,
+            "body": body,
+            "rating": rating,
+            "photo_filename": photo_filename,
+            "writer_id": writer_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        result = self.db.child("review").push(review_info)
+        return result.get("name")
